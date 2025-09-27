@@ -33,6 +33,9 @@ public class HelloController {
     @FXML
     private TableColumn<Personne, String> prenomColumn;
 
+    @FXML
+    private TableColumn<Personne, String> ageColumn;
+
     private ObservableList<Personne> personnesData;
 
     @FXML
@@ -45,6 +48,7 @@ public class HelloController {
         // Lier les colonnes aux propriétés
         nomColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getNom()));
         prenomColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPrenom()));
+        ageColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getAge()));
 
         // Charger les données depuis la base
         personnesData = FXCollections.observableArrayList(PersonneDAO.findAll());
@@ -55,7 +59,7 @@ public class HelloController {
     private void onSaveClick(){
 
         String nom = nomField.getText().trim();
-        String prenom = prenomField.getText().trim();
+        String prenom = prenomField.getText();
         String age = ageField.getText().trim();
 
         if(!nom.isEmpty() && !prenom.isEmpty() && !age.isEmpty()){
@@ -68,6 +72,8 @@ public class HelloController {
                 personne.setAge(age);
 
                 PersonneDAO.save(personne);
+                personnesData.add(personne);
+                clearFields();
 
                 System.out.println("✅ Personne enregistrée avec succès !");
 
@@ -80,7 +86,9 @@ public class HelloController {
 
     @FXML
     private void onUpdateClick(){
+
         Personne personneSelected = tableView.getSelectionModel().getSelectedItem();
+
         if (personneSelected != null && !nomField.getText().isEmpty() && !prenomField.getText().isEmpty() && !ageField.getText().isEmpty()){
             try {
                 personneSelected.setNom(nomField.getText());
@@ -89,7 +97,7 @@ public class HelloController {
 
                 PersonneDAO.update(personneSelected);
                 tableView.refresh();
-                //clearFields();
+                clearFields();
 
                 System.out.println("✅ Personne modifiée avec succès !");
 
@@ -107,7 +115,8 @@ public class HelloController {
 
                 PersonneDAO.delete(personneSelected);
                 tableView.refresh();
-                //clearFields();
+
+                clearFields();
 
                 System.out.println("✅ Personne supprimée avec succès !");
 
@@ -118,4 +127,18 @@ public class HelloController {
         }
         }
     }
+
+    @FXML
+    private void onTableViewClick(){
+        Personne personneSelected = tableView.getSelectionModel().getSelectedItem();
+        nomField.setText(personneSelected.getNom());
+        prenomField.setText(personneSelected.getPrenom());
+        ageField.setText(personneSelected.getAge());
+    }
+    public void clearFields(){
+        nomField.setText("");
+        prenomField.setText("");
+        ageField.setText("");
+    }
+
 }

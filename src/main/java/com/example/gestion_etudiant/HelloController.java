@@ -2,8 +2,12 @@ package com.example.gestion_etudiant;
 
 import com.example.gestion_etudiant.dao.PersonneDAO;
 import com.example.gestion_etudiant.model.Personne;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
@@ -24,8 +28,27 @@ public class HelloController {
     private TableView<Personne> tableView;
 
     @FXML
+    private TableColumn<Personne, String> nomColumn;
+
+    @FXML
+    private TableColumn<Personne, String> prenomColumn;
+
+    private ObservableList<Personne> personnesData;
+
+    @FXML
     protected void onHelloButtonClick() {
         welcomeText.setText("Welcome to JavaFX Application!");
+    }
+
+    @FXML
+    public void initialize() {
+        // Lier les colonnes aux propriétés
+        nomColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getNom()));
+        prenomColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPrenom()));
+
+        // Charger les données depuis la base
+        personnesData = FXCollections.observableArrayList(PersonneDAO.findAll());
+        tableView.setItems(personnesData);
     }
 
     @FXML

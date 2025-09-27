@@ -9,7 +9,7 @@ public class Utils {
 
     static {
         try {
-            emf = Persistence.createEntityManagerFactory("my-persistence-unit");
+            emf = Persistence.createEntityManagerFactory("persistence");
         } catch (Throwable ex) {
             System.err.println("Erreur lors de la création de l'EntityManagerFactory." + ex);
             throw new ExceptionInInitializerError(ex);

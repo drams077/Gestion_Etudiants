@@ -114,8 +114,9 @@ public class HelloController {
             try {
 
                 PersonneDAO.delete(personneSelected);
-                tableView.refresh();
 
+                tableView.refresh();
+                personnesData.remove(personneSelected);
                 clearFields();
 
                 System.out.println("✅ Personne supprimée avec succès !");
